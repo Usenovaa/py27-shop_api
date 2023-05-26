@@ -26,3 +26,12 @@ class Rating(models.Model):
         return self.rating
     
     
+
+class Like(models.Model):
+    product = models.ForeignKey(Product, related_name='likes', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.product} liked by {self.author.email}'
+    
+

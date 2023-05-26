@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     # apps
     'product',
     'review',
-    'account'
+    'account', 
+    'order'
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
+# JWT token
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -1,15 +1,21 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
-from .models import Comment, Rating
+from rest_framework.serializers import ModelSerializer, ValidationError, ReadOnlyField
+from .models import Comment, Rating, Like
 
 
 class CommentSerializer(ModelSerializer):
+    author = ReadOnlyField(source='author.email')
     class Meta:
         model = Comment
         fields = '__all__'
 
-
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        comment = Comment.objects.create(author=user, **validated_data)
+        return comment
+    
 
 class RatingSerializer(ModelSerializer):
+    author = ReadOnlyField(source='author.email')
     class Meta:
         model = Rating
         fields = '__all__'
@@ -21,10 +27,29 @@ class RatingSerializer(ModelSerializer):
             )
         return rating
     
-    def validate_product(self, product):
-        if self.Meta.model.objects.filter(product=product).exists():
-            raise ValidationError(
-                'Вы уже оставляли рэйтинг'
-            )
-        return product
+    # def validate_product(self, product):
+    #     if self.Meta.model.objects.filter(product=product).exists():
+    #         raise ValidationError(
+    #             'Вы уже оставляли рэйтинг'
+    #         )
+    #     return product
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        rating = Rating.objects.create(author=user, **validated_data)
+        return rating
+
     
+
+class LikeSerializer(ModelSerializer):
+    author = ReadOnlyField(source='author.email')
+    product = ReadOnlyField()
+
+    class Meta:
+        model = Like
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        like = Like.objects.create(author=user, **validated_data)
+        return like
