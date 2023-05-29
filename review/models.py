@@ -35,3 +35,4 @@ class Like(models.Model):
         return f'{self.product} liked by {self.author.email}'
     
 
+
