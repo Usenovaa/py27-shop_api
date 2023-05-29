@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, ReadOnlyField
-from .models import Comment, Rating, Like
+from .models import Comment, Rating, Like, Favorite
 
 
 class CommentSerializer(ModelSerializer):
@@ -53,3 +53,16 @@ class LikeSerializer(ModelSerializer):
         user = self.context.get('request').user
         like = Like.objects.create(author=user, **validated_data)
         return like
+    
+
+class FavoriteSerializer(ModelSerializer):
+    author = ReadOnlyField(source='author.email')
+    product = ReadOnlyField()
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        favorite = Favorite.objects.create(author=user, **validated_data)
+        return favorite

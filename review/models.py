@@ -35,4 +35,10 @@ class Like(models.Model):
         return f'{self.product} liked by {self.author.email}'
     
 
+class Favorite(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
 
+
+    def __str__(self):
+        return f'{self.product.title} -> {self.author.email}'
